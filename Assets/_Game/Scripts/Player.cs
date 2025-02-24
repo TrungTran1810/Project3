@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
             Shoot();
         GameObject a = PoolingManager.Instance.GetGameObject("bullet");
         if(a != null )
-        {
+         {
             a.SetActive(true);
       
         }
