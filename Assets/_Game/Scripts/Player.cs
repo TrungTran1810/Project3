@@ -27,10 +27,10 @@ public class PlayerMovement : MonoBehaviour
 
             Shoot();
         GameObject a = PoolingManager.Instance.GetGameObject("bullet");
-        if(a != null )
-         {
+        if (a != null)
+        {
             a.SetActive(true);
-      
+
         }
     }
     private void Move()
@@ -62,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
             Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
             rigidbody.velocity = FilePoint.forward * bulletSpeed;
 
-            Destroy(bullet, 2f);
+           
         }
     }
 
