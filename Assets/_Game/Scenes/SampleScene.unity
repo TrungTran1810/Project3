@@ -1968,10 +1968,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolItems:
-  - Amount: 10
+  - Amount: 0
     prefab: {fileID: 661922529767994550, guid: 01e7e72061e042d4f9e1c4c9597c3c78, type: 3}
-  - Amount: 10
-    prefab: {fileID: 661922529767994550, guid: 01e7e72061e042d4f9e1c4c9597c3c78, type: 3}
+  - Amount: 0
+    prefab: {fileID: 0}
+  - Amount: 0
+    prefab: {fileID: 0}
   poolArr: []
 --- !u!4 &1536403428
 Transform:

@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 5f;
     public float rotationSpeed = 10f;
     private Rigidbody rb;
-    [SerializeField] private Joystick joystick;
+    [SerializeField] Joystick joystick;
     public GameObject Bulletprefab;
     public Transform FilePoint;
     public float bulletSpeed=20f;
@@ -26,12 +26,12 @@ public class PlayerMovement : MonoBehaviour
     {
 
             Shoot();
-        GameObject a = PoolingManager.Instance.GetGameObject("bullet");
-        if (a != null)
-        {
-            a.SetActive(true);
+        //GameObject a = PoolingManager.Instance.GetGameObject("bullet");
+        //if (a != null)
+        //{
+        //    a.SetActive(true);
 
-        }
+        //}
     }
     private void Move()
     {
@@ -62,7 +62,12 @@ public class PlayerMovement : MonoBehaviour
             Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
             rigidbody.velocity = FilePoint.forward * bulletSpeed;
 
-           
+
+            //}
+            // GameObject bullet = PoolingManager.instance.Getbullet();
+            //if (bullet != null) { 
+            //  bullet.transform.position = 
+            //}
         }
     }
 
