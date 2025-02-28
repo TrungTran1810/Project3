@@ -1,96 +1,125 @@
-﻿using Unity.VisualScripting;
+﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
-    public float speed = 5f;
+    public float speedx = 5f;
     public float rotationSpeed = 10f;
     private Rigidbody rb;
     [SerializeField] Joystick joystick;
     public GameObject Bulletprefab;
     public Transform FilePoint;
-    public float bulletSpeed=20f;
+    public float bulletSpeed = 20f;
+    public Coroutine ShootingCorotine;
+    public bool isMoving=false;
+    //protected virtual void Start()
+    // {
+    //     rb = GetComponent<Rigidbody>();
 
-    private bool isShooting=false;
-    void Start()
+    // }
+
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        if (joystick == null)
+        {
+            joystick = FindObjectOfType<Joystick>();
+        }
+    }
+    void Start()
+    {
+       
     }
 
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
         Move();
-        
+
     }
     private void Update()
     {
 
-            Shoot();
-        //GameObject a = PoolingManager.Instance.GetGameObject("bullet");
-        //if (a != null)
-        //{
-        //    a.SetActive(true);
-
-        //}
     }
-    private void Move()
+    void Move()
     {
+
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
 
         moveX = joystick.Horizontal;
-        moveZ = joystick.Vertical;  
+        moveZ = joystick.Vertical;
         Vector3 moveDirection = new Vector3(moveX, 0, moveZ);
-        // Di chuyển nhân vật
+
+        isMoving = moveDirection.magnitude > 0; // Kiểm tra xem nhân vật có đang di chuyển không
+       
         if (moveDirection.magnitude > 0)
         {
-            rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
+            this.rb.MovePosition(rb.position + moveDirection * speedx * Time.fixedDeltaTime);
 
-            // Xoay nhân vật theo hướng di chuyển
-            //Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            //rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+         
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
         }
     }
 
-    private void Shoot()
+    IEnumerator shootwithdeley()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isShooting == true)
+        while (!isMoving) // Chỉ bắn khi không di chuyển
         {
-            GameObject bullet = Instantiate(Bulletprefab, FilePoint.position, FilePoint.rotation);
-            Debug.Log("Đạn đã được tạo!");
-            Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
-            rigidbody.velocity = FilePoint.forward * bulletSpeed;
-
-
-            //}
-            // GameObject bullet = PoolingManager.instance.Getbullet();
-            //if (bullet != null) { 
-            //  bullet.transform.position = 
-            //}
+            Shoot();
+            yield return new WaitForSeconds(2f);
         }
+        ShootingCorotine = null; // Dừng coroutine khi nhân vật bắt đầu di chuyển
     }
+    //private void Shoot()
+    //{
 
 
-    private void OnTriggerEnter(Collider other)
+    //    GameObject bullet = Instantiate(Bulletprefab, FilePoint.position, FilePoint.rotation);
+    //    Debug.Log("Đạn đã được tạo!");
+    //    Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
+    //    rigidbody.velocity = FilePoint.forward * bulletSpeed;
+
+    //}
+    protected void Shoot()
     {
-        if (other.gameObject.tag == "Enemy")
+        GameObject bullet = PoolingManager.Instance.GetGameObject("Bullet");
+        if (bullet != null)
         {
-                Shoot();
-                isShooting = true;
-            
-           
+            bullet.transform.position = FilePoint.position;
+            bullet.transform.rotation = FilePoint.rotation;
+            bullet.SetActive(true);
+
+            Rigidbody rb = bullet.GetComponent<Rigidbody>();
+            rb.velocity = FilePoint.forward * bulletSpeed;
         }
-       
     }
-    private void OnTriggerExit(Collider other)
+
+
+     void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy") && ShootingCorotine == null)
+        {
+            ShootingCorotine = StartCoroutine(shootwithdeley()); // Bắt đầu bắn 
+        }
+    }
+     void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Enemy")
         {
             Debug.Log("Rời khỏi Enemy, ngừng bắn");
-            isShooting = false;
+
+            if (ShootingCorotine != null)
+            {
+                StopCoroutine(ShootingCorotine);
+                ShootingCorotine = null;
+            }
         }
+
+       
     }
-    
+
 
 }
