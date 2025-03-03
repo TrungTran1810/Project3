@@ -15,9 +15,13 @@ public class Player : MonoBehaviour
     public bool isMoving = false;
     public bool isShooting = false;
     public Transform CurrentTager;
-    
+    private Animator animator;
+
+    private enum PlayerState { idle, Walk }
+    //private PlayerState currentState = PlayerState.idle;
     protected void Awake()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         if (joystick == null)
         {
@@ -29,7 +33,9 @@ public class Player : MonoBehaviour
 
     protected void FixedUpdate()
     {
+       
         Move();
+        HandleState();
 
     }
  
@@ -112,9 +118,38 @@ public class Player : MonoBehaviour
             rb.velocity = FilePoint.forward * bulletSpeed;
         }
     }
+    void HandleState()
+    {
+        if (isMoving)
+        {
+            animator.ResetTrigger("idle");
+            animator.SetTrigger("Run");
+        }
+        else
+        {
+            animator.ResetTrigger("Run");
+            animator.SetTrigger("idle");
 
+        }
+    }
 
-   protected virtual void OnTriggerEnter(Collider other)
+    //void handlesate()
+    //{
+    //    switch (currentState)
+    //    {
+    //        case PlayerState.idle:
+    //            animator.SetTrigger("idle"); // Trạng thái đứng yên
+    //            CheckEnemy();
+    //            break;
+
+    //        case PlayerState.Walk:
+    //            animator.SetTrigger("Run"); // Trạng thái đi
+    //            Move();
+    //            break;
+    //    }
+    //}
+
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("tron"))
         {
