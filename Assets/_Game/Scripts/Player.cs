@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
 
     private enum PlayerState { idle, Walk }
     //private PlayerState currentState = PlayerState.idle;
-    protected void Awake()
+    private  void Awake()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -31,9 +31,13 @@ public class Player : MonoBehaviour
   
  
 
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
-       
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbody bị null!");
+            return;
+        }
         Move();
         HandleState();
 
@@ -82,7 +86,7 @@ public class Player : MonoBehaviour
     //}
 
 
-    void Move()
+       protected void Move()
     {
         float moveX = joystick.Horizontal;
         float moveZ = joystick.Vertical;
@@ -118,8 +122,13 @@ public class Player : MonoBehaviour
             rb.velocity = FilePoint.forward * bulletSpeed;
         }
     }
-    void HandleState()
+   protected void HandleState()
     {
+        if (animator == null)
+        {
+            Debug.LogError("Animator chưa được gán!");
+            return;
+        }
         if (isMoving)
         {
             animator.ResetTrigger("idle");

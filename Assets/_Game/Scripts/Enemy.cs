@@ -3,29 +3,45 @@ using UnityEngine.AI;
 
 public class EnemyAI :Player
 {
-    public Transform player; 
+    public Transform enemy; 
     private NavMeshAgent agent; 
     public float speedEnemy ; 
     private bool isAttacking=false;
     public float attackDelay = 0.1f;
-    protected  void Start()
+    protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speedEnemy;
+        
+    }
+    //protected override void  FixedUpdate()
+    //{
+    //    if (enemy != null)
+    //    {
+            
+    //        agent.SetDestination(enemy.position);
+    //        Shoot();
+    //        HandleState();
+    //        CheckEnemy();
+    //    }
+    //    //Shoot();
+    //}
+    //protected void Awake()
+    //{
+    //    agent = GetComponent<NavMeshAgent>();
+    //    agent.speed = speedEnemy;
+    //}
+    protected override void Update()
+    {
+
+
+        CheckEnemy();
     }
 
-   protected override void Update()
-    {
-        if (player != null && !isAttacking)
-        {
-            agent.SetDestination(player.position); 
-        }
-    }
 
-
-   protected override  void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("tron")&& !isAttacking)
+        if (other.gameObject.CompareTag("tron") && !isAttacking)
         {
             isAttacking = true;
             agent.isStopped = true;
@@ -36,7 +52,7 @@ public class EnemyAI :Player
             Invoke(nameof(ResumeMovement), attackDelay);
         }
     }
-   protected override  void OnTriggerExit(Collider other)
+    protected override void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("tron"))
         {
@@ -48,18 +64,18 @@ public class EnemyAI :Player
 
         if (other.gameObject.CompareTag("Bullet")) // Nếu bị trúng đạn
         {
-            gameObject.SetActive(false); // Ẩn Enemy thay vì Destroy
-                                         
+            //gameObject.SetActive(false); // Ẩn Enemy thay vì Destroy
+
         }
     }
 
-    private void ResumeMovement()
+    protected void ResumeMovement()
     {
         isAttacking = false;
         agent.isStopped = false;
     }
 
-   
+
 
 
 
