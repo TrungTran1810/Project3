@@ -21,7 +21,7 @@ public class Statemachine : MonoBehaviour
 
     private void Update()
     {
-        switch (currentstate) { 
+        switch (currentstate) {  
         
         case state.Idle:
                 break;

@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speedx = 5f;
+   [SerializeField] private float SpeedPlayer ;
     public float rotationSpeed = 10f;
     private Rigidbody rb;
     [SerializeField] Joystick joystick;
     public GameObject Bulletprefab;
     [SerializeField] private Transform FilePoint;
-    public float bulletSpeed = 20f;
+    public float bulletSpeed = 50f;
     public Coroutine ShootingCorotine;
     public bool isMoving = false;
     public bool isShooting = false;
@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         if (rb == null)
+
+
         {
             Debug.LogError("Rigidbody bị null!");
             return;
@@ -97,7 +99,7 @@ public class Player : MonoBehaviour
         if (isMoving)
         {
             // Di chuyển nhân vật
-            rb.MovePosition(rb.position + moveDirection.normalized * speedx * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + moveDirection.normalized *SpeedPlayer * Time.fixedDeltaTime);
 
             // Xoay nhân vật về hướng di chuyển
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection.normalized);
@@ -122,7 +124,7 @@ public class Player : MonoBehaviour
             rb.velocity = FilePoint.forward * bulletSpeed;
         }
     }
-   protected void HandleState()
+   protected virtual void HandleState()
     {
         if (animator == null)
         {
@@ -158,7 +160,7 @@ public class Player : MonoBehaviour
     //    }
     //}
 
-    protected virtual void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("tron"))
         {
@@ -166,7 +168,7 @@ public class Player : MonoBehaviour
 
         }
     }
-   protected virtual void OnTriggerExit(Collider other)
+   private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("tron"))
         {

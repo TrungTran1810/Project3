@@ -8,16 +8,19 @@ public class FollowPlayer : MonoBehaviour
     [SerializeField] private float speed;
 
     void Start()
-    {
+     {
         agent = GetComponent<NavMeshAgent>(); // Lấy NavMeshAgent
         agent.SetDestination(player.position);
+        agent.speed = speed;
     }
 
-    //void Update()
-    //{
-    //    if (player != null)
-    //    {
-    //        agent.SetDestination(player.position); // Di chuyển tới vị trí của Player
-    //    }
-    //}
+    void Update()
+    {
+        Debug.Log(agent.destination);
+
+        if (player != null)
+        {
+            agent.SetDestination(player.position); // Di chuyển tới vị trí của Player
+        }
+    }
 }

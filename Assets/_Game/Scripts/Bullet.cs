@@ -3,13 +3,20 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-   
-    private void OnCollisionEnter(Collision collision)
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Enemy"))
+    //    {
+    //        // Gây sát thương nếu cần
+    //        gameObject.SetActive(false); // Không hủy mà chỉ tắt đi
+    //    }
+    //}
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Player"))
         {
-            // Gây sát thương nếu cần
-            gameObject.SetActive(false); // Không hủy mà chỉ tắt đi
+            gameObject.SetActive(false);
         }
     }
 

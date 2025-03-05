@@ -1,24 +1,29 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.PlayerLoop;
+using UnityEngine.UI;
 
 public class EnemyAI :Player
 {
     public Transform enemy; 
     private NavMeshAgent agent; 
     public float speedEnemy ; 
-    private bool isAttacking=false;
+    
     public float attackDelay = 0.1f;
+    public bool ismoving=false;
+    private Animator ani;
     protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speedEnemy;
-        
+        ani = GetComponent<Animator>();
     }
-    //protected override void  FixedUpdate()
+  
+    //protected override void FixedUpdate()
     //{
     //    if (enemy != null)
     //    {
-            
+
     //        agent.SetDestination(enemy.position);
     //        Shoot();
     //        HandleState();
@@ -26,24 +31,52 @@ public class EnemyAI :Player
     //    }
     //    //Shoot();
     //}
-    //protected void Awake()
-    //{
-    //    agent = GetComponent<NavMeshAgent>();
-    //    agent.speed = speedEnemy;
-    //}
+    
     protected override void Update()
     {
+        if (enemy != null)
+        {
+
+            agent.SetDestination(enemy.position);
+            
+            // Shoot();
+            changeState();
+            //CheckEnemy();
+        }
 
 
-        CheckEnemy();
     }
 
-
-    protected override void OnTriggerEnter(Collider other)
+    void changeState()
     {
-        if (other.gameObject.CompareTag("tron") && !isAttacking)
+       
+            // Cập nhật ismoving theo tốc độ của agent
+            ismoving = agent.velocity.magnitude > 0.1f;
+
+            if (ismoving)
+            {
+                ani.ResetTrigger("idle");
+                ani.SetTrigger("Run");
+            }
+            else
+            {
+                ani.ResetTrigger("Run");
+                ani.SetTrigger("idle");
+            }
+        
+
+    }
+    //protected override void HandleState()
+    //{
+    //    isMoving = agent.velocity.magnitude > 0.1f;
+
+    //}
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("tron"))
         {
-            isAttacking = true;
+           
             agent.isStopped = true;
             Shoot();
             CurrentTager = other.transform;
@@ -51,27 +84,27 @@ public class EnemyAI :Player
             // Sau khi bắn, gọi phương thức tiếp tục di chuyển sau attackDelay giây
             Invoke(nameof(ResumeMovement), attackDelay);
         }
+       
     }
-    protected override void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("tron"))
         {
 
-            isAttacking = false;
             agent.isStopped = false;
             CurrentTager = null; // Thoát khỏi Enemy thì xóa mục tiêu
         }
 
-        if (other.gameObject.CompareTag("Bullet")) // Nếu bị trúng đạn
-        {
-            //gameObject.SetActive(false); // Ẩn Enemy thay vì Destroy
+        //if (other.gameObject.CompareTag("Player")) // Nếu bị trúng đạn
+        //{
+        //    gameObject.SetActive(false); // Ẩn Enemy thay vì Destroy
 
-        }
+        //}
     }
 
-    protected void ResumeMovement()
+    private void ResumeMovement()
     {
-        isAttacking = false;
+       
         agent.isStopped = false;
     }
 
