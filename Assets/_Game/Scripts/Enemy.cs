@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
@@ -86,6 +87,7 @@ public class EnemyAI :Player
         }
        
     }
+  
     void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("tron"))

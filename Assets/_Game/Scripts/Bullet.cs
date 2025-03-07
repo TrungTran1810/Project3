@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -24,7 +25,13 @@ public class Bullet : MonoBehaviour
     {
         StartCoroutine(DisableAfterTime(3f)); // Tắt sau 3s nếu không trúng mục tiêu
     }
-
+    private void OnCollisionEnter(Collision collision)
+    {
+       if(collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Enemy"))
+        {
+            gameObject.SetActive(false);
+        }
+    }
     private IEnumerator DisableAfterTime(float time)
     {
         yield return new WaitForSeconds(time);

@@ -7,22 +7,21 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public Transform target; // Nhân vật cần theo dõi
-    public float distance = 5f;  // Khoảng cách camera với nhân vật
-    public float height = 2f;    // Độ cao của camera
-    public float smoothSpeed = 5f; // Độ mượt khi di chuyển
+    public float speed = 1f;
+    public Vector3 offSet = Vector3.zero;
 
     void LateUpdate()
     {
         if (target == null) return;
 
         // Tính toán vị trí mong muốn của camera
-        Vector3 desiredPosition = target.position - target.forward * distance + Vector3.up * height;
+        //Vector3 desiredPosition = target.position - target.forward * distance + Vector3.up * height;
 
         // Di chuyển camera mượt mà
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(this.transform.position, target.position + offSet , speed );
 
         // Camera luôn nhìn về nhân vật
-        transform.LookAt(target.position + Vector3.up * 1.5f);
+        //transform.L(target.position + Vector3.up * 1.5f);
     }
 }
 
